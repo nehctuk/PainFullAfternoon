@@ -9,12 +9,11 @@ import java.util.ArrayList;
 import static org.junit.Assert.*;
 
 public class ItemParserTest {
-
     private String rawSingleItem =    "naMe:Milk;price:3.23;type:Food;expiration:1/25/2016##";
 
     private String rawSingleItemIrregularSeperatorSample = "naMe:MiLK;price:3.23;type:Food^expiration:1/11/2016##";
 
-    private String rawBrokenSingleItem =    "naMe:Milk;price:3.23;type:Food;expiration:1/25/2016##";
+    private String rawBrokenSingleItem =    "naMe:;price:3.23;type:Food;expiration:1/25/2016##";
 
     private String rawMultipleItems = "naMe:Milk;price:3.23;type:Food;expiration:1/25/2016##"
                                       +"naME:BreaD;price:1.23;type:Food;expiration:1/02/2016##"
@@ -32,6 +31,34 @@ public class ItemParserTest {
         ArrayList<String> items = itemParser.parseRawDataIntoStringArray(rawMultipleItems);
         Integer actualArraySize = items.size();
         assertEquals(expectedArraySize, actualArraySize);
+    }
+
+    @Test
+    public void parseNameTest() throws Exception {
+        String expected = "milk";
+        String actual = itemParser.parseName(rawSingleItem);
+        Assert.assertEquals(expected,actual);
+    }
+
+    @Test
+    public void parsePriceTest() throws Exception {
+        Double expected = 3.23;
+        Double actual = itemParser.parsePrice(rawSingleItem);
+        Assert.assertEquals(expected,actual, 0.0001);
+    }
+
+    @Test
+    public void parseTypeTest() throws Exception {
+        String expected = "food";
+        String actual = itemParser.parseType(rawSingleItem);
+        Assert.assertEquals(expected,actual);
+    }
+
+    @Test
+    public void parseExpirationTest() throws Exception {
+        String expected = "1/25/2016";
+        String actual = itemParser.parseExpirationDate(rawSingleItem);
+        Assert.assertEquals(expected,actual);
     }
 
     @Test
@@ -59,4 +86,5 @@ public class ItemParserTest {
         Integer actual = itemParser.findKeyValuePairsInRawItemData(rawSingleItemIrregularSeperatorSample).size();
         assertEquals(expected, actual);
     }
+
 }
